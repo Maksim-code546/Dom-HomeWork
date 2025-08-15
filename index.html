@@ -73,5 +73,41 @@
     
     return `${day}.${month}.${year} ${hours}:${minutes}`;
 }
+
+  function addComment() {
+    const name = nameInput.value.trim();
+    const commentText = commentInput.value.trim();
+
+    if (!name || !commentText) {
+        alert('Пожалуйста заполните, все поля');
+        return;
+  }
+
+  const currentDate = formatDate(new Date());
+    const newComment = `
+      <li class="comment">
+        <div class="comment-header">
+          <div>${name}</div>
+          <div>${currentDate}</div>
+        </div>
+        <div class="comment-body">
+          <div class="comment-text">
+            ${commentText}
+          </div>
+        </div>
+        <div class="comment-footer">
+          <div class="likes">
+            <span class="likes-counter">0</span>
+            <button class="like-button"></button>
+          </div>
+        </div>
+      </li>
+    `;
+
+    commentList.insertAdjacentHTML('beforeend', newComment);
+
+    nameInput.value = '';
+    commentInput.value = '';
+  }
   </script>
 </html>
