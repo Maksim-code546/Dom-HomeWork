@@ -60,7 +60,7 @@
     "use strict";
   
   const nameInput = document.getElementById('name-input');
-  const addButton = document.getElementById('add-buttton');
+  const addButton = document.getElementById('add-button');
   const commentInput = document.getElementById('comment-input');
   const commentList = document.querySelector('.comments');
 
@@ -73,6 +73,23 @@
     
     return `${day}.${month}.${year} ${hours}:${minutes}`;
 }
+
+    function setupLikeButtons() {
+    document.querySelectorAll('.like-button').forEach(button => {
+      button.addEventListener('click', function() {
+        const likesCounter = this.parentElement.querySelector('.likes-counter');
+        const currentLikes = parseInt(likesCounter.textContent);
+        
+        if (this.classList.contains('-active-like')) {
+          likesCounter.textContent = currentLikes - 1;
+          this.classList.remove('-active-like');
+        } else {
+          likesCounter.textContent = currentLikes + 1;
+          this.classList.add('-active-like');
+        }
+      });
+    });
+  }
 
   function addComment() {
     const name = nameInput.value.trim();
@@ -108,6 +125,10 @@
 
     nameInput.value = '';
     commentInput.value = '';
+
+    setupLikeButtons();
   }
+
+   
   </script>
 </html>
