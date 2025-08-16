@@ -129,6 +129,21 @@
     setupLikeButtons();
   }
 
-   
+  addButton.addEventListener('click', addComment);
+
+  nameInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      addComment();
+    }
+    });
+
+  commentInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      addComment();
+    }
+    });
+
+    console.log("It works!");
   </script>
 </html>
