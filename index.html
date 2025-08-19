@@ -1,11 +1,149 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DOM</title>
+  <title>Проект "Комменты"</title>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-    
+  <div class="container">
+    <ul class="comments">
+      <li class="comment">
+        <div class="comment-header">
+          <div>Глеб Фокин</div>
+          <div>12.02.22 12:18</div>
+        </div>
+        <div class="comment-body">
+          <div class="comment-text">
+            Это будет первый комментарий на этой странице
+          </div>
+        </div>
+        <div class="comment-footer">
+          <div class="likes">
+            <span class="likes-counter">3</span>
+            <button class="like-button"></button>
+          </div>
+        </div>
+      </li>
+      <li class="comment">
+        <div class="comment-header">
+          <div>Варвара Н.</div>
+          <div>13.02.22 19:22</div>
+        </div>
+        <div class="comment-body">
+          <div class="comment-text">
+            Мне нравится как оформлена эта страница! ❤
+          </div>
+        </div>
+        <div class="comment-footer">
+          <div class="likes">
+            <span class="likes-counter">75</span>
+            <button class="like-button -active-like"></button>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <div class="add-form">
+      <input type="text" id="name-input" class="add-form-name" placeholder="Введите ваше имя" />
+      <textarea type="textarea" id="comment-input" class="add-form-text" placeholder="Введите ваш коментарий"
+        rows="4"></textarea>
+      <div class="add-form-row">
+        <button id="add-button" class="add-form-button">Написать</button>
+      </div>
+    </div>
+  </div>
 </body>
+
+<script>
+    "use strict";
+  
+  const nameInput = document.getElementById('name-input');
+  const addButton = document.getElementById('add-button');
+  const commentInput = document.getElementById('comment-input');
+  const commentList = document.querySelector('.comments');
+
+  function formatDate(date) {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = String(date.getFullYear()).slice(-2);
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    
+    return `${day}.${month}.${year} ${hours}:${minutes}`;
+}
+
+    function setupLikeButtons() {
+    document.querySelectorAll('.like-button').forEach(button => {
+      button.addEventListener('click', function() {
+        const likesCounter = this.parentElement.querySelector('.likes-counter');
+        const currentLikes = parseInt(likesCounter.textContent);
+        
+        if (this.classList.contains('-active-like')) {
+          likesCounter.textContent = currentLikes - 1;
+          this.classList.remove('-active-like');
+        } else {
+          likesCounter.textContent = currentLikes + 1;
+          this.classList.add('-active-like');
+        }
+      });
+    });
+  }
+
+  function addComment() {
+    const name = nameInput.value.trim();
+    const commentText = commentInput.value.trim();
+
+    if (!name || !commentText) {
+        alert('Пожалуйста заполните, все поля');
+        return;
+  }
+
+  const currentDate = formatDate(new Date());
+    const newComment = `
+      <li class="comment">
+        <div class="comment-header">
+          <div>${name}</div>
+          <div>${currentDate}</div>
+        </div>
+        <div class="comment-body">
+          <div class="comment-text">
+            ${commentText}
+          </div>
+        </div>
+        <div class="comment-footer">
+          <div class="likes">
+            <span class="likes-counter">0</span>
+            <button class="like-button"></button>
+          </div>
+        </div>
+      </li>
+    `;
+
+    commentList.insertAdjacentHTML('beforeend', newComment);
+
+    nameInput.value = '';
+    commentInput.value = '';
+
+    setupLikeButtons();
+  }
+
+  addButton.addEventListener('click', addComment);
+
+  nameInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      addComment();
+    }
+    });
+
+  commentInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      addComment();
+    }
+    });
+
+    console.log("It works!");
+  </script>
 </html>
