@@ -78,6 +78,69 @@
         </div>
       </li>
     `).join('');
+
+        document.querySelectorAll('.like-button').forEach(button => {
+      button.addEventListener('click', function() {
+        const commentId = parseInt(this.closest('.comment').dataset.id);
+        const comment = commentsData.find(c => c.id === commentId);
+        
+        if (comment.isLiked) {
+          comment.likes--;
+          comment.isLiked = false;
+        } else {
+          comment.likes++;
+          comment.isLiked = true;
+        }
+        
+        renderComments();
+      });
+    });
+  }
+
+    function addComment() {
+    const name = nameInput.value.trim();
+    const commentText = commentInput.value.trim();
+
+    if (!name || !commentText) {
+        alert('Пожалуйста заполните, все поля');
+        return;
+  }
+
+  const newComment = {
+      id: Date.now(), 
+      name: name,
+      date: formatDate(new Date()),
+      text: commentText,
+      likes: 0,
+      isLiked: false
+    };
+
+    commentsData.push(newComment);
+    renderComments();
+
+    nameInput.value = '';
+    commentInput.value = '';
+  }
+
+    addButton.addEventListener('click', addComment);
+
+  nameInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      addComment();
+    }
+    });
+
+  commentInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      addComment();
+    }
+  });
+
+    renderComments();
+    });
+
+    console.log("It works!");
     </script>
   </body>
 </html>
