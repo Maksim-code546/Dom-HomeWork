@@ -47,6 +47,7 @@
   const addButton = document.getElementById('add-button');
   const commentInput = document.getElementById('comment-input');
   const commentsList = document.getElementById('comments-list');
+  const cancelReplyButton = document.getElementById('cancel-reply');
 
     function formatDate(date) {
     const day = String(date.getDate()).padStart(2, '0');
@@ -135,7 +136,7 @@
       e.preventDefault();
       addComment();
     }
-  });
+  }); 
 
     renderComments();
     });
