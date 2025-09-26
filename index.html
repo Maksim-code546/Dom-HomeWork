@@ -78,6 +78,12 @@ function escapeHtml(unsafe) {
     cancelReplyButton.style.display = 'inline-block';
   }
 
+  function cancelReply() {
+    commentInput.value = '';
+    replyingTo = null;
+    cancelReplyButton.style.display = 'none';
+  }
+
  function renderComments() {
     commentsList.innerHTML = commentsData.map(comment => `
       <li class="comment" data-id="${comment.id}">
