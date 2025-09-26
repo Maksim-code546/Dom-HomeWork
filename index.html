@@ -141,7 +141,7 @@ function escapeHtml(unsafe) {
 
     function addComment() {
     const name = nameInput.value.trim();
-    const commentText = commentInput.value.trim();
+    let commentText = commentInput.value.trim();
 
     if (!name || !commentText) {
         alert('Пожалуйста заполните, все поля');
