@@ -146,8 +146,10 @@ function escapeHtml(unsafe) {
         return;
   }
 
-  const newComment = {
-      id: Date.now(), 
+  commentText = escapeHtml(commentText);
+    
+    const newComment = {
+      id: Date.now(),
       name: name,
       date: formatDate(new Date()),
       text: commentText,
