@@ -88,12 +88,12 @@ function escapeHtml(unsafe) {
     commentsList.innerHTML = commentsData.map(comment => `
       <li class="comment" data-id="${comment.id}">
         <div class="comment-header">
-          <div>${comment.name}</div>
+          <div>${escapeHtml(comment.name)}</div>
           <div>${comment.date}</div>
         </div>
         <div class="comment-body">
           <div class="comment-text">
-            ${comment.text}
+            ${escapeHtml(comment.text)}
           </div>
         </div>
         <div class="comment-footer">
@@ -105,8 +105,22 @@ function escapeHtml(unsafe) {
       </li>
     `).join('');
 
+    document.querySelectorAll('.comment').forEach(commentElement => {
+      commentElement.addEventListener('click', function(e) {
+        if (e.target.closest('.like-button')) {
+          return; 
+        }
+        
+        const commentId = parseInt(this.dataset.id);
+        const comment = commentsData.find(c => c.id === commentId);
+        quoteComment(comment);
+      });
+    });
+
         document.querySelectorAll('.like-button').forEach(button => {
-      button.addEventListener('click', function() {
+      button.addEventListener('click', function(e) {
+        e.stopPropagation(); 
+        
         const commentId = parseInt(this.closest('.comment').dataset.id);
         const comment = commentsData.find(c => c.id === commentId);
         
