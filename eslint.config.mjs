@@ -11,4 +11,6 @@ export default defineConfig([
         extends: ['js/recommended'],
         languageOptions: { globals: globals.browser },
     },
+    config,
+    plugin,
 ])

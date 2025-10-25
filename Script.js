@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
             text: commentText,
             likes: 0,
             isLiked: false,
-            parentId: replyingTo
+            parentId: replyingTo,
         }
 
         commentsData.push(newComment)
