@@ -1,0 +1,26 @@
+{
+  "name": "dom-homework-1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Maksim-code546/Dom-HomeWork.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Maksim-code546/Dom-HomeWork/issues"
+  },
+  "homepage": "https://github.com/Maksim-code546/Dom-HomeWork#readme",
+  "dependencies": {
+    "data-fns": "^1.1.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2"
+  }
+}
