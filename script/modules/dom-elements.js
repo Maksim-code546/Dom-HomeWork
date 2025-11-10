@@ -1,0 +1,5 @@
+export const nameInput = document.getElementById('name-input')
+export const addButton = document.getElementById('add-button')
+export const commentInput = document.getElementById('comment-input')
+export const commentsList = document.getElementById('comments-list')
+export const cancelReplyButton = document.getElementById('cancel-reply')
