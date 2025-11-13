@@ -8,8 +8,8 @@ fetch('https://wedev-api.sky.pro/api/v1/Maksim-Zubov/comments')
     .then((response) => {
         return response.json()
     })
-    .then((Data) => {
-        updateCommentData(Data.comments)
+    .then((data) => {
+        updateCommentData(data.comments)
         renderComments()
     })
 

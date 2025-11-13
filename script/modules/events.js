@@ -30,7 +30,7 @@ export function addComment() {
 
     const newComment = {
         id: Date.now(),
-        name: name,
+        name: escapeHtml(name),
         date: formatDate(new Date()),
         text: commentText,
         likes: 0,
@@ -38,12 +38,24 @@ export function addComment() {
         parentId: replyingTo,
     }
 
-    addCommentToData(newComment)
-    renderComments()
+    fetch('https://wedev-api.sky.pro/api/v1/Maksim-Zubov/comments', {
+        method: 'POST',
+        body: JSON.stringify({
+            name: newComment.name,
+            text: newComment.text,
+        }),
+    })
+        .then((response) => {
+            return response.json()
+        })
+        .then(({ comments }) => {
+            addCommentToData(comments)
+            renderComments()
 
-    nameInput.value = ''
-    commentInput.value = ''
-    cancelReply()
+            nameInput.value = ''
+            commentInput.value = ''
+            cancelReply()
+        })
 }
 
 export function cancelReply() {
