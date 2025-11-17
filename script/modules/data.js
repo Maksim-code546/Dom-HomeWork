@@ -3,15 +3,16 @@ import { formatDate } from './util.js'
 export let commentsData = []
 
 export const updateCommentData = (newComments) => {
-    commentsData = newComments.map((comment) => ({
-        id: comment.id,
-        name: comment.author?.name || 'Аноним',
-        date: formatDate(new Date(comment.date)),
-        text: comment.text,
-        likes: comment.likes || 0,
-        isLiked: comment.isLiked || false,
-        parentId: comment.parentId || null,
-    }))
+    commentsData =
+        newComments?.map((comment) => ({
+            id: comment?.id || Date.now() + Math.random(),
+            name: comment?.author?.name || 'Аноним',
+            date: formatDate(new Date(comment?.date)),
+            text: comment?.text || '',
+            likes: comment?.likes || 0,
+            isLiked: comment?.isLiked || false,
+            parentId: comment?.parentId || null,
+        })) || []
 }
 
 export let replyingTo = null

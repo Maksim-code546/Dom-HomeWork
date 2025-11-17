@@ -4,9 +4,7 @@ import { commentsList, cancelReplyButton } from './dom-elements.js'
 import { quoteComment } from './events.js'
 
 export function renderComments() {
-    const safeComments = commentsData || []
-
-    commentsList.innerHTML = safeComments
+    commentsList.innerHTML = commentsData
         .map(
             (comment) => `
         <li class="comment" data-id="${comment.id}">

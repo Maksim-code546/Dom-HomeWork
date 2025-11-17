@@ -1,4 +1,5 @@
 import {
+    updateCommentData,
     addCommentToData,
     replyingTo,
     setReplyingTo,
@@ -38,23 +39,36 @@ export function addComment() {
         parentId: replyingTo,
     }
 
+    addCommentToData(newComment)
+    renderComments()
+
+    nameInput.value = ''
+    commentInput.value = ''
+    cancelReply()
+
     fetch('https://wedev-api.sky.pro/api/v1/Maksim-Zubov/comments', {
         method: 'POST',
         body: JSON.stringify({
-            name: newComment.name,
-            text: newComment.text,
+            name: name,
+            text: commentText,
         }),
     })
         .then((response) => {
             return response.json()
         })
-        .then(({ comments }) => {
-            addCommentToData(comments)
+        .then((data) => {
+            console.log('Комментарий добавлен на сервер:', data)
+            return fetch(
+                'https://wedev-api.sky.pro/api/v1/Maksim-Zubov/comments',
+            )
+        })
+        .then((response) => {
+            return response.json()
+        })
+        .then((data) => {
+            console.log(data)
+            updateCommentData(data.comments)
             renderComments()
-
-            nameInput.value = ''
-            commentInput.value = ''
-            cancelReply()
         })
 }
 
