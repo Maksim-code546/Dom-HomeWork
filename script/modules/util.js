@@ -9,7 +9,10 @@ export function formatDate(date) {
 }
 
 export function escapeHtml(unsafe) {
-    if (!unsafe) return ''
+    if (unsafe == null) return ''
+    if (typeof unsafe !== 'string') {
+        unsafe = String(unsafe)
+    }
     return unsafe
         .replaceAll('&', '&amp;')
         .replaceAll('<', '&lt;')

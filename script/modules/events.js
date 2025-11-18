@@ -1,4 +1,5 @@
 import {
+    updateCommentData,
     addCommentToData,
     replyingTo,
     setReplyingTo,
@@ -30,7 +31,7 @@ export function addComment() {
 
     const newComment = {
         id: Date.now(),
-        name: name,
+        name: escapeHtml(name),
         date: formatDate(new Date()),
         text: commentText,
         likes: 0,
@@ -44,6 +45,31 @@ export function addComment() {
     nameInput.value = ''
     commentInput.value = ''
     cancelReply()
+
+    fetch('https://wedev-api.sky.pro/api/v1/Maksim-Zubov/comments', {
+        method: 'POST',
+        body: JSON.stringify({
+            name: name,
+            text: commentText,
+        }),
+    })
+        .then((response) => {
+            return response.json()
+        })
+        .then((data) => {
+            console.log('Комментарий добавлен на сервер:', data)
+            return fetch(
+                'https://wedev-api.sky.pro/api/v1/Maksim-Zubov/comments',
+            )
+        })
+        .then((response) => {
+            return response.json()
+        })
+        .then((data) => {
+            console.log(data)
+            updateCommentData(data.comments)
+            renderComments()
+        })
 }
 
 export function cancelReply() {
