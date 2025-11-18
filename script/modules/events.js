@@ -27,6 +27,14 @@ export function addComment() {
         return
     }
 
+    const addForm = document.getElementById('add-form')
+    const addingMessage = document.getElementById('adding-message')
+    const addButton = document.getElementById('add-button')
+
+    addForm.style.display = 'none'
+    addingMessage.style.display = 'block'
+    addButton.disabled = true
+
     commentText = escapeHtml(commentText)
 
     const newComment = {
