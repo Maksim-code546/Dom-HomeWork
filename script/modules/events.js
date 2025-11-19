@@ -27,6 +27,14 @@ export function addComment() {
         return
     }
 
+    const addForm = document.getElementById('add-form')
+    const addingMessage = document.getElementById('adding-message')
+    const addButton = document.getElementById('add-button')
+
+    addForm.style.display = 'none'
+    addingMessage.style.display = 'block'
+    addButton.disabled = true
+
     commentText = escapeHtml(commentText)
 
     const newComment = {
@@ -40,11 +48,6 @@ export function addComment() {
     }
 
     addCommentToData(newComment)
-    renderComments()
-
-    nameInput.value = ''
-    commentInput.value = ''
-    cancelReply()
 
     fetch('https://wedev-api.sky.pro/api/v1/Maksim-Zubov/comments', {
         method: 'POST',
@@ -66,9 +69,16 @@ export function addComment() {
             return response.json()
         })
         .then((data) => {
-            console.log(data)
             updateCommentData(data.comments)
             renderComments()
+
+            nameInput.value = ''
+            commentInput.value = ''
+            cancelReply()
+
+            addForm.style.display = 'block'
+            addingMessage.style.display = 'none'
+            addButton.disabled = false
         })
 }
 
