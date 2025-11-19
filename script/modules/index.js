@@ -39,8 +39,3 @@ export {
     addComment,
     cancelReply,
 }
-
-document.addEventListener('DOMContentLoaded', function () {
-    renderComments()
-    setupEventListeners()
-})
