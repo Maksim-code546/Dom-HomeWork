@@ -18,9 +18,30 @@ import {
     hideCancelReplyButton,
 } from './render.js'
 
+let savedName = ''
+let savedComment = ''
+
+nameInput.addEventListener('input', function () {
+    savedName = this.value
+})
+
+commentInput.addEventListener('input', function () {
+    savedComment = this.value
+})
+
+function restoreFormData() {
+    nameInput.value = savedName
+    commentInput.value = savedComment
+}
+
 export function addComment() {
     const name = nameInput.value.trim()
     let commentText = commentInput.value.trim()
+
+    if (name.length < 3 || commentText.length < 3) {
+        alert('Имя и комментарий должны быть не короче 3 символов')
+        return
+    }
 
     if (!validateInput(name, commentText)) {
         alert('Пожалуйста заполните, все поля')
@@ -54,6 +75,7 @@ export function addComment() {
         body: JSON.stringify({
             name: name,
             text: commentText,
+            forceError: true,
         }),
     })
         .then((response) => {
@@ -75,6 +97,28 @@ export function addComment() {
             nameInput.value = ''
             commentInput.value = ''
             cancelReply()
+
+            addForm.style.display = 'block'
+            addingMessage.style.display = 'none'
+            addButton.disabled = false
+        })
+        .catch((error) => {
+            console.error('Ошибка:', error)
+
+            restoreFormData()
+
+            if (error.message === 'SERVER_ERROR') {
+                alert('Сервер сломался, попробуй позже')
+            } else if (
+                error.message === 'NETWORK_ERROR' ||
+                error.message.includes('Failed to fetch')
+            ) {
+                alert('Кажется, у вас сломался интернет, попробуйте позже')
+            } else if (error.message === 'BAD_REQUEST') {
+                alert('Некорректный запрос')
+            } else {
+                alert('Произошла ошибка, попробуйте позже')
+            }
 
             addForm.style.display = 'block'
             addingMessage.style.display = 'none'
