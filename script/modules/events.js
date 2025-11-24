@@ -21,13 +21,15 @@ import {
 let savedName = ''
 let savedComment = ''
 
-nameInput.addEventListener('input', function () {
-    savedName = this.value
-})
+export function setupFormListeners() {
+    nameInput.addEventListener('input', function () {
+        savedName = this.value
+    })
 
-commentInput.addEventListener('input', function () {
-    savedComment = this.value
-})
+    commentInput.addEventListener('input', function () {
+        savedComment = this.value
+    })
+}
 
 function restoreFormData() {
     nameInput.value = savedName
@@ -38,13 +40,8 @@ export function addComment() {
     const name = nameInput.value.trim()
     let commentText = commentInput.value.trim()
 
-    if (name.length < 3 || commentText.length < 3) {
-        alert('Имя и комментарий должны быть не короче 3 символов')
-        return
-    }
-
     if (!validateInput(name, commentText)) {
-        alert('Пожалуйста заполните, все поля')
+        alert('Имя и комментарий должны быть не короче 3 символов')
         return
     }
 
@@ -55,6 +52,9 @@ export function addComment() {
     addForm.style.display = 'none'
     addingMessage.style.display = 'block'
     addButton.disabled = true
+
+    savedName = name
+    savedComment = commentText
 
     commentText = escapeHtml(commentText)
 
@@ -79,6 +79,15 @@ export function addComment() {
         }),
     })
         .then((response) => {
+            if (!response.ok) {
+                if (response.status === 400) {
+                    throw new Error('VALIDATION_ERROR')
+                } else if (response.status === 500) {
+                    throw new Error('SERVER_ERROR')
+                } else {
+                    throw new Error('NETWORK_ERROR')
+                }
+            }
             return response.json()
         })
         .then((data) => {
@@ -88,6 +97,9 @@ export function addComment() {
             )
         })
         .then((response) => {
+            if (!response.ok) {
+                throw new Error('NETWORK_ERROR')
+            }
             return response.json()
         })
         .then((data) => {
@@ -96,6 +108,8 @@ export function addComment() {
 
             nameInput.value = ''
             commentInput.value = ''
+            savedName = ''
+            savedComment = ''
             cancelReply()
 
             addForm.style.display = 'block'
@@ -107,17 +121,12 @@ export function addComment() {
 
             restoreFormData()
 
-            if (error.message === 'SERVER_ERROR') {
+            if (error.message === 'VALIDATION_ERROR') {
                 alert('Сервер сломался, попробуй позже')
-            } else if (
-                error.message === 'NETWORK_ERROR' ||
-                error.message.includes('Failed to fetch')
-            ) {
-                alert('Кажется, у вас сломался интернет, попробуйте позже')
-            } else if (error.message === 'BAD_REQUEST') {
-                alert('Некорректный запрос')
+            } else if (error.message === 'SERVER_ERROR') {
+                alert('Сервер сломался, попробуй позже')
             } else {
-                alert('Произошла ошибка, попробуйте позже')
+                alert('Кажется, у вас сломался интернет, попробуйте позже')
             }
 
             addForm.style.display = 'block'
@@ -128,6 +137,7 @@ export function addComment() {
 
 export function cancelReply() {
     commentInput.value = ''
+    savedComment = ''
     clearReplyingTo()
     hideCancelReplyButton()
 }
@@ -135,6 +145,7 @@ export function cancelReply() {
 export function quoteComment(comment) {
     const quotedText = `> ${comment.text}\n\n@${comment.name}, `
     commentInput.value = quotedText
+    savedComment = quotedText
     commentInput.focus()
     setReplyingTo(comment.id)
     showCancelReplyButton()
@@ -143,6 +154,7 @@ export function quoteComment(comment) {
 export function setupEventListeners() {
     addButton.addEventListener('click', addComment)
     cancelReplyButton.addEventListener('click', cancelReply)
+    setupFormListeners()
 
     nameInput.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') addComment()
