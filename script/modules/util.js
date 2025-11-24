@@ -22,5 +22,5 @@ export function escapeHtml(unsafe) {
 }
 
 export function validateInput(name, text) {
-    return name.trim() !== '' && text.trim() !== ''
+    return name.trim().length >= 3 && text.trim().length >= 3
 }
