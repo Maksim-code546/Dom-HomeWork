@@ -17,6 +17,7 @@ import {
     showCancelReplyButton,
     hideCancelReplyButton,
 } from './render.js'
+import { createComment, getComments } from './api.js'
 
 let savedName = ''
 let savedComment = ''
@@ -70,37 +71,10 @@ export function addComment() {
 
     addCommentToData(newComment)
 
-    fetch('https://wedev-api.sky.pro/api/v1/Maksim-Zubov/comments', {
-        method: 'POST',
-        body: JSON.stringify({
-            name: name,
-            text: commentText,
-            forceError: true,
-        }),
-    })
-        .then((response) => {
-            if (!response.ok) {
-                if (response.status === 400) {
-                    throw new Error('VALIDATION_ERROR')
-                } else if (response.status === 500) {
-                    throw new Error('SERVER_ERROR')
-                } else {
-                    throw new Error('NETWORK_ERROR')
-                }
-            }
-            return response.json()
-        })
-        .then((data) => {
-            console.log('Комментарий добавлен на сервер:', data)
-            return fetch(
-                'https://wedev-api.sky.pro/api/v1/Maksim-Zubov/comments',
-            )
-        })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error('NETWORK_ERROR')
-            }
-            return response.json()
+    createComment({ name: name, text: commentText, forceError: true })
+        .then(() => {
+            console.log('Комментарий добавлен на сервер')
+            return getComments()
         })
         .then((data) => {
             updateCommentData(data.comments)

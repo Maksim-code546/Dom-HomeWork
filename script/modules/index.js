@@ -1,24 +1,13 @@
 import { commentsData, updateCommentData } from './data.js'
-import { formatDate, escapeHtml } from './util.js'
 import { renderComments } from './render.js'
-import { setupEventListeners, addComment, cancelReply } from './events.js'
+import { setupEventListeners } from './events.js'
+import { getComments } from './api.js'
 
 function loadComments() {
-    return fetch('https://wedev-api.sky.pro/api/v1/Maksim-Zubov/comments')
-        .then((response) => {
-            if (!response.ok) {
-                if (response.status === 500) {
-                    throw new Error('SERVER_ERROR')
-                } else {
-                    throw new Error('NETWORK_ERROR')
-                }
-            }
-            return response.json()
-        })
-        .then((data) => {
-            updateCommentData(data.comments)
-            renderComments()
-        })
+    return getComments().then((data) => {
+        updateCommentData(data.comments)
+        renderComments()
+    })
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -51,11 +40,4 @@ document.addEventListener('DOMContentLoaded', function () {
         })
 })
 
-export {
-    commentsData,
-    formatDate,
-    escapeHtml,
-    renderComments,
-    addComment,
-    cancelReply,
-}
+export { commentsData, renderComments }
