@@ -17,13 +17,32 @@ import {
     showCancelReplyButton,
     hideCancelReplyButton,
 } from './render.js'
+import { createComment, getComments } from './api.js'
+
+let savedName = ''
+let savedComment = ''
+
+export function setupFormListeners() {
+    nameInput.addEventListener('input', function () {
+        savedName = this.value
+    })
+
+    commentInput.addEventListener('input', function () {
+        savedComment = this.value
+    })
+}
+
+function restoreFormData() {
+    nameInput.value = savedName
+    commentInput.value = savedComment
+}
 
 export function addComment() {
     const name = nameInput.value.trim()
     let commentText = commentInput.value.trim()
 
     if (!validateInput(name, commentText)) {
-        alert('Пожалуйста заполните, все поля')
+        alert('Имя и комментарий должны быть не короче 3 символов')
         return
     }
 
@@ -34,6 +53,9 @@ export function addComment() {
     addForm.style.display = 'none'
     addingMessage.style.display = 'block'
     addButton.disabled = true
+
+    savedName = name
+    savedComment = commentText
 
     commentText = escapeHtml(commentText)
 
@@ -49,24 +71,10 @@ export function addComment() {
 
     addCommentToData(newComment)
 
-    fetch('https://wedev-api.sky.pro/api/v1/Maksim-Zubov/comments', {
-        method: 'POST',
-        body: JSON.stringify({
-            name: name,
-            text: commentText,
-        }),
-    })
-        .then((response) => {
-            return response.json()
-        })
-        .then((data) => {
-            console.log('Комментарий добавлен на сервер:', data)
-            return fetch(
-                'https://wedev-api.sky.pro/api/v1/Maksim-Zubov/comments',
-            )
-        })
-        .then((response) => {
-            return response.json()
+    createComment({ name: name, text: commentText, forceError: true })
+        .then(() => {
+            console.log('Комментарий добавлен на сервер')
+            return getComments()
         })
         .then((data) => {
             updateCommentData(data.comments)
@@ -74,7 +82,26 @@ export function addComment() {
 
             nameInput.value = ''
             commentInput.value = ''
+            savedName = ''
+            savedComment = ''
             cancelReply()
+
+            addForm.style.display = 'block'
+            addingMessage.style.display = 'none'
+            addButton.disabled = false
+        })
+        .catch((error) => {
+            console.error('Ошибка:', error)
+
+            restoreFormData()
+
+            if (error.message === 'VALIDATION_ERROR') {
+                alert('Сервер сломался, попробуй позже')
+            } else if (error.message === 'SERVER_ERROR') {
+                alert('Сервер сломался, попробуй позже')
+            } else {
+                alert('Кажется, у вас сломался интернет, попробуйте позже')
+            }
 
             addForm.style.display = 'block'
             addingMessage.style.display = 'none'
@@ -84,6 +111,7 @@ export function addComment() {
 
 export function cancelReply() {
     commentInput.value = ''
+    savedComment = ''
     clearReplyingTo()
     hideCancelReplyButton()
 }
@@ -91,6 +119,7 @@ export function cancelReply() {
 export function quoteComment(comment) {
     const quotedText = `> ${comment.text}\n\n@${comment.name}, `
     commentInput.value = quotedText
+    savedComment = quotedText
     commentInput.focus()
     setReplyingTo(comment.id)
     showCancelReplyButton()
@@ -99,6 +128,7 @@ export function quoteComment(comment) {
 export function setupEventListeners() {
     addButton.addEventListener('click', addComment)
     cancelReplyButton.addEventListener('click', cancelReply)
+    setupFormListeners()
 
     nameInput.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') addComment()
