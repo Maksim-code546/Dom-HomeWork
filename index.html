@@ -9,20 +9,40 @@
 
 <body>
   <div class="container">
-    <div id="loading-message" class="loading-message">Комментарии загружаются...</div>
-    <ul class="comments" id="comments-list"></ul>
-    <div class="add-form" id="add-form">
-      <input type="text" id="name-input" class="add-form-name" placeholder="Введите ваше имя" />
-      <textarea id="comment-input" class="add-form-text" placeholder="Введите ваш коментарий"
-        rows="4"></textarea>
-      <div class="add-form-row">
-        <button id="add-button" class="add-form-button">Написать</button>
-        <button id="cancel-reply" class="add-form-button" style="display: none; margin-left: 10px; background-color: #ff6b6b;">Отмена</button>
+    <div id="login-screen" class="login-screen" style="display: none;">
+      <h2>Вход</h2>
+      <div class="login-form">
+        <input type="text" id="login-input" class="login-input" placeholder="Логин" />
+        <input type="password" id="password-input" class="login-input" placeholder="Пароль" />
+        <div id="login-error" class="error-message" style="display: none;"></div>
+        <button id="login-button" class="login-button">Войти</button>
+        <button id="back-to-comments" class="login-button secondary">Назад к комментариям</button>
       </div>
     </div>
-    <div id="adding-message" class="loading-message" style="display: none;">Комментарий добавляется...</div>
+
+    <div id="comments-screen">
+      <div id="loading-message" class="loading-message">Комментарии загружаются...</div>
+      <ul class="comments" id="comments-list"></ul>
+      
+      <div id="login-link-container" class="login-link-container" style="display: none;">
+        <p class="login-link-text">
+          Чтобы добавить комментарий, <a href="#" id="login-link">авторизуйтесь</a>
+        </p>
+      </div>
+        
+      <div class="add-form" id="add-form" style="display: none;">
+        <input type="text" id="name-input" class="add-form-name" placeholder="Ваше имя" readonly />
+        <textarea id="comment-input" class="add-form-text" placeholder="Введите ваш комментарий"
+          rows="4"></textarea>
+        <div class="add-form-row">
+          <button id="add-button" class="add-form-button">Написать</button>
+          <button id="cancel-reply" class="add-form-button" style="display: none; margin-left: 10px; background-color: #ff6b6b;">Отмена</button>
+        </div>
+      </div>
+      <div id="adding-message" class="loading-message" style="display: none;">Комментарий добавляется...</div>
+    </div>
   </div>
 
-<script type="module" src="./script/modules/index.js"></script>
-  </body>
+  <script type="module" src="./script/modules/index.js"></script>
+</body>
 </html>
